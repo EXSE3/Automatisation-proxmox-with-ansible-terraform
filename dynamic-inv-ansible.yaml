@@ -1,0 +1,12 @@
+# prerequis:  ansible-galaxy collection install community.general
+# export PVE_URL='https://192.168.x.x:8006'
+#export VE_USERNAME='user@pam'
+#export VE_PASSWORD='votre_mot_de_passe'
+
+
+plugin: community.general.proxmox
+url: https://192.168.182.20:8006
+user: "{{ lookup('env', 'ANSIBLE_USER') }}"
+password: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
+validate_certs: no
+want_facts: true
