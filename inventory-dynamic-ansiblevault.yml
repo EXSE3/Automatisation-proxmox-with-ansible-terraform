@@ -1,0 +1,6 @@
+plugin: community.general.proxmox
+url: http://192.168.182.20:8006
+user: "{{ ansible_user }}"
+password: "{{ ansible_password }}"
+validate_certs: no  # uniquement faire cela si vous faites confiance au réseau !
+want_facts: true
