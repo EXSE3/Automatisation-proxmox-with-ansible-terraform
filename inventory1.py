@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
+# installer python 
+# prerequis: pip install requests
+#export PVE_URL='https://192.168..:8006'
+#export PVE_USERNAME='user@pam'
+#export PVE_PASSWORD='votre_mot_de_passe'
 
+import os 
 import requests
 import sys
 import warnings
@@ -8,9 +14,11 @@ import warnings
 warnings.filterwarnings("ignore", message="Unverified HTTPS request is being made")
 
 # Remplacez ces valeurs par vos coordonnées
-PVE_URL = 'https://192.168.182.20:8006'
-VE_USERNAME = 'root@pam'  # Utilisation de root@pam
-VE_PASSWORD = 'root'  # Remplacez par votre mot de passe
+
+PVE_URL = os.environ.get('PVE_URL')
+VE_USERNAME = os.environ.get('PVE_USERNAME')
+VE_PASSWORD = os.environ.get('PVE_PASSWORD')
+
 
 def authenticate():
     try:
