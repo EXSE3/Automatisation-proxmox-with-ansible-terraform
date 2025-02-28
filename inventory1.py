@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#this script create the dynamic inventory in proxmox
 # installer python 
 # prerequis: pip install requests
 #export PVE_URL='https://192.168..:8006'
