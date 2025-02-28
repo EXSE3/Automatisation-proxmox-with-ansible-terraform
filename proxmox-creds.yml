@@ -1,2 +1,3 @@
+#execute with: ansible-vault create proxmox_creds.yml
 ansible_user: ccccc
 ansible_password: cccccc
