@@ -79,3 +79,25 @@ vim /etc/fstab
 /dev/mapper/VG_SIV-LV_DATA /dataservers/siv_data xfs     defaults        0 0
 /dev/mapper/VG_SIV-LV_LOG /dataservers/siv_log xfs     defaults        0 0
 /dev/mapper/VG_SIV-LV_TEMPDB /dataservers/siv_tempdb xfs     defaults        0 0
+
+
+-----------------------------------------------SWAP------------------
+sudo dd if=/dev/zero of=/swapfile bs=1G count=2
+sudo chmod 600 /swapfile
+
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+swapon --show
+free -h
+sudo nano /etc/fstab
+/swapfile none swap sw 0 0
+
+sudo swapoff -a    # Désactive tous les swaps
+sudo swapon -a     # Réactive tous les swaps
+
+----------------------------------------UUID---------------------------
+sudo blkid
+UUID=87654321-4321-4321-4321-cba987654321 none swap sw 0 0
+
+
