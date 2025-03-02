@@ -1,0 +1,81 @@
+PROCEDURE DE PROVISIONNING 
+-------------------------------------------------------------------------------
+Dans l’idéal 4 partitions avec des noms type minio-1, minio-2,minio-3, minio-4
+Partons sur 30Go par partition
+-------------------------------------------------------------------------------
++ partition système de 50 Go
+
+lvrename /dev/vg02/lvold vg02/lvnew
+
+lvrename /dev/mapper/ubuntu--vg-lv--0 mapper/minio-1
+
+lvrename mapper ubuntu--vg-lv--0 minio-1
+------------------------------------------------------------------------
+REDIMENSIONER LE DISQUE
+lvs
+pvs
+lvresize -r -L +10G /dev/rootvg
+rescan-scsi-bus
+for host in /sys/class/scsi_host/host*; do echo "- - -" > $host/scan; done
+apt-get install sg"-utils
+echo 1 > /sys/class/scsi_disk/1\:0\:0:/device/rescan
+cfdisk /dev/sda
+pvresize /dev/sda3
+pvs
+vgs
+------------------------------------------------------------------------
+ETENDRE LE DISQUE 
+
+lvresize -r -L +10G /dev/rootvg
+lvextend -L10G /dev/mapper/ubuntu--vg-minio--1
+resize2fs /dev/mapper/ubuntu--vg-minio--1
+vgextend ubuntu-vg /dev/sda3
+--------------------------------------------------------------------------
+#vgcreate VG_BCAPRO /dev/sdc
+
+lvcreate -n minio-2 -L 30G ubuntu-vg
+lvcreate -n minio-3 -L 30G ubuntu-vg
+lvcreate -n minio-4 -L 30G ubuntu-vg
+lvcreate -n minio-1 -L 30G ubuntu-vg
+
+mkfs.ext4 /dev/ubuntu-vg/minio-2
+mkfs.ext4 /dev/ubuntu-vg/minio-3
+mkfs.ext4 /dev/ubuntu-vg/minio-4
+mount /dev/ubuntu-vg/minio-2 /opt/exse/data/minio-2/
+mount /dev/ubuntu-vg/minio-3 /opt/exse/data/minio-3/
+mount /dev/ubuntu-vg/minio-4 /opt/exse/data/minio-4/
+mount /dev/ubuntu-vg/minio-1 /opt/exse/data/minio-1/
+-----------------------------------------------------------------------------------
+vim /etc/fstab
+/dev/mapper/ubuntu--vg-minio--1 /opt/exse/data/minio-1 ext4     defaults        0 0
+/dev/mapper/ubuntu--vg-minio--2 /opt/exse/data/minio-2 ext4     defaults        0 0
+/dev/mapper/ubuntu--vg-minio--3 /opt/exse/data/minio-3 ext4     defaults        0 0
+/dev/mapper/ubuntu--vg-minio--4 /opt/exse/data/minio-4 ext4     defaults        0 0
+
+------------------------------------------------------------------------------------------
+
+
+
+lvcreate -n LV_LOG -L 60G VG_exsePRO
+lvcreate -n LV_TEMPDB -L 30G VG_exsePRO
+vgs -o +vg_free_count,vg_extent_count
+lvcreate -l7679 -n LV_TEMPDB VG_BCAPRO
+
+
+mkfs.xfs /dev/VG_exsePRO/LV_DATA
+mkfs.xfs /dev/VG_exsePRO/LV_LOG
+mkfs.xfs /dev/VG_exsePRO/LV_TEMPDB
+
+
+mount /dev/VG_exsePRO/LV_DATA /dataservers/pro_data
+mount /dev/VG_PRO/LV_LOG /dataservers/bcapro_log
+mount /dev/VG_PRO/LV_TEMPDB /dataservers/pro_tempdb
+
+
+vim /etc/fstab
+/dev/mapper/VG_PRO-LV_DATA /dataservers/pro_data xfs     defaults        0 0
+/dev/mapper/VG_PRO-LV_LOG /dataservers/pro_log xfs     defaults        0 0
+/dev/mapper/VG_PRO-LV_TEMPDB /dataservers/pro_tempdb xfs     defaults        0 0
+/dev/mapper/VG_SIV-LV_DATA /dataservers/siv_data xfs     defaults        0 0
+/dev/mapper/VG_SIV-LV_LOG /dataservers/siv_log xfs     defaults        0 0
+/dev/mapper/VG_SIV-LV_TEMPDB /dataservers/siv_tempdb xfs     defaults        0 0
