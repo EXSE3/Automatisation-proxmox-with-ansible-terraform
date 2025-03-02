@@ -31,7 +31,7 @@ lvextend -L10G /dev/mapper/ubuntu--vg-minio--1
 resize2fs /dev/mapper/ubuntu--vg-minio--1
 vgextend ubuntu-vg /dev/sda3
 --------------------------------------------------------------------------
-#vgcreate VG_BCAPRO /dev/sdc
+#vgcreate VG_exsePRO /dev/sdc
 
 lvcreate -n minio-2 -L 30G ubuntu-vg
 lvcreate -n minio-3 -L 30G ubuntu-vg
