@@ -1,4 +1,11 @@
 PROCEDURE DE PROVISIONNING 
+
+fdisk
+cfdisk
+sgdisk
+lsblk
+lsbid
+parted
 -------------------------------------------------------------------------------
 Dans l’idéal 4 partitions avec des noms type minio-1, minio-2,minio-3, minio-4
 Partons sur 30Go par partition
